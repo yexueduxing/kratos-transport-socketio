@@ -1,43 +1,69 @@
 package socketio
 
-import "time"
+import (
+	socketLog "github.com/zishang520/engine.io/v2/log"
+	"github.com/zishang520/engine.io/v2/types"
+	"time"
+)
 
-type Config struct {
-	Network      string
-	Address      string
-	Path         string
-	PingInterval time.Duration
-	PingTimeout  time.Duration
-}
+type Options func(server *Server)
 
-type Option func(*Config)
-
-func WithNetwork(network string) Option {
-	return func(c *Config) {
-		c.Network = network
+func WithAddress(addr string) Options {
+	return func(s *Server) {
+		s.address = addr
 	}
 }
 
-func WithAddress(addr string) Option {
-	return func(c *Config) {
-		c.Address = addr
+func WithPath(path string) Options {
+	return func(s *Server) {
+		s.ServerOptions.SetPath(path)
 	}
 }
 
-func WithPath(path string) Option {
-	return func(c *Config) {
-		c.Path = path
+func WithPingInterval(d time.Duration) Options {
+	return func(s *Server) {
+		s.SetPingInterval(d)
 	}
 }
 
-func WithPingInterval(d time.Duration) Option {
-	return func(c *Config) {
-		c.PingInterval = d
+func WithPingTimeout(d time.Duration) Options {
+	return func(s *Server) {
+		s.SetPingTimeout(d)
 	}
 }
 
-func WithPingTimeout(d time.Duration) Option {
-	return func(c *Config) {
-		c.PingTimeout = d
+func WithAllowUpgrades(a bool) Options {
+	return func(s *Server) {
+		s.SetAllowUpgrades(a)
+	}
+}
+
+func WithUpgradeTimeout(d time.Duration) Options {
+	return func(s *Server) {
+		s.SetUpgradeTimeout(d)
+	}
+}
+
+func WithCors(c *types.Cors) Options {
+	return func(s *Server) {
+		s.SetCors(c)
+	}
+}
+
+func WithAllowEIO3(b bool) Options {
+	return func(s *Server) {
+		s.SetAllowEIO3(b)
+	}
+}
+
+func WithServerClient(b bool) Options {
+	return func(s *Server) {
+		s.Server.SetServeClient(b)
+	}
+}
+
+func WithDebug(b bool) Options {
+	return func(s *Server) {
+		socketLog.DEBUG = b
 	}
 }
